@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gifter</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Share Tech Mono',monospace;}
+body{
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  background:linear-gradient(-45deg,#0f0,#000,#0f0,#001100);
+  background-size:400% 400%;
+  animation:gradientBG 15s ease infinite;
+  overflow:hidden;
+  color:#0f0;
+}
+#particles-js{position:absolute;width:100%;height:100%;z-index:0;}
+.container{
+  position:relative;
+  width:360px;
+  padding:40px;
+  border-radius:15px;
+  background:rgba(0,0,0,0.7);
+  border:1px solid #0f0;
+  box-shadow:0 0 20px #0f0,0 0 40px #0f0 inset;
+  text-align:center;
+  z-index:1;
+  animation:fadeIn 1s ease-in-out;
+}
+.container h2{
+  margin-bottom:25px;
+  font-size:24px;
+  text-shadow:0 0 5px #0f0,0 0 10px #0f0;
+  animation:glitch 1s infinite;
+}
+.input-group{position:relative;margin-bottom:20px;}
+.input-group input{
+  width:100%;
+  padding:12px 40px 12px 15px;
+  border-radius:5px;
+  border:1px solid #0f0;
+  background:rgba(0,0,0,0.5);
+  color:#0f0;
+  font-size:14px;
+  outline:none;
+  transition:0.3s;
+}
+.input-group input:focus{
+  background:rgba(0,0,0,0.7);
+  box-shadow:0 0 10px #0f0;
+}
+.input-group input::placeholder{color:#0f0aa0;}
+.toggle-password{
+  position:absolute;
+  right:12px;
+  top:12px;
+  cursor:pointer;
+  font-size:12px;
+  color:#0f0;
+}
+button{
+  width:100%;
+  padding:12px;
+  border-radius:5px;
+  border:1px solid #0f0;
+  background:transparent;
+  color:#0f0;
+  font-weight:600;
+  font-family:inherit;
+  position:relative;
+  overflow:hidden;
+  cursor:pointer;
+}
+button::before{
+  content:'';
+  position:absolute;
+  width:100%;
+  height:100%;
+  top:0; left:-100%;
+  background:#0f0;
+  transition:all 0.3s;
+  opacity:0.2;
+}
+button:hover::before{left:0;}
+.spinner{
+  border:3px solid rgba(0,255,0,0.3);
+  border-top:3px solid #0f0;
+  border-radius:50%;
+  width:18px;
+  height:18px;
+  animation:spin 1s linear infinite;
+  position:absolute;
+  top:50%; left:50%;
+  transform:translate(-50%,-50%);
+  display:none; /* hidden initially */
+}
+.message{
+  margin-bottom:15px;
+  font-size:13px;
+  min-height:20px;
+}
+@keyframes gradientBG{
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
+}
+@keyframes fadeIn{
+  from{opacity:0;transform:translateY(-20px);}
+  to{opacity:1;transform:translateY(0);}
+}
+@keyframes spin{
+  0%{transform:translate(-50%,-50%) rotate(0deg);}
+  100%{transform:translate(-50%,-50%) rotate(360deg);}
+}
+@keyframes glitch{
+  0%{text-shadow:0 0 5px #0f0;}
+  25%{text-shadow:2px 0 #0f0,-2px 2px #0f0;}
+  50%{text-shadow:-2px 0 #0f0,2px 2px #0f0;}
+  75%{text-shadow:2px 2px #0f0,-2px -2px #0f0;}
+  100%{text-shadow:0 0 5px #0f0;}
+}
+@media(max-width:400px){.container{width:90%;padding:30px;}}
+</style>
+</head>
+<body>
+<div id="particles-js"></div>
+<div class="container">
+  <h2>ACCESS GRANTED</h2>
+  <div class="message" id="message"></div>
+  <form id="loginForm">
+    <div class="input-group">
+      <input type="text" id="username" placeholder="Username" required>
+    </div>
+    <div class="input-group">
+      <input type="password" id="password" placeholder="Password" required>
+      <span class="toggle-password" onclick="togglePassword()">Show</span>
+    </div>
+    <button type="submit">LOGIN
+      <div class="spinner" id="spinner"></div>
+    </button>
+  </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+<script>
+particlesJS("particles-js",{
+  "particles":{
+    "number":{"value":120},
+    "color":{"value":"#0f0"},
+    "shape":{"type":"circle"},
+    "opacity":{"value":0.3},
+    "size":{"value":2},
+    "line_linked":{"enable":true,"distance":120,"color":"#0f0","opacity":0.2,"width":1},
+    "move":{"enable":true,"speed":3,"attract":{"enable":true,"rotateX":300,"rotateY":300}}
+  },
+  "interactivity":{"events":{"onhover":{"enable":true,"mode":"repulse"},"onclick":{"enable":true,"mode":"push"}}}
+});
+
+const form=document.getElementById("loginForm");
+const messageDiv=document.getElementById("message");
+const spinner=document.getElementById("spinner");
+
+form.addEventListener("submit",function(e){
+  e.preventDefault();
+  // Show spinner
+  spinner.style.display="block";
+  // Show hacker-style waiting message
+  messageDiv.textContent="Wait for a moment...";
+  // Disable form inputs
+  document.getElementById("username").disabled = true;
+  document.getElementById("password").disabled = true;
+});
+function togglePassword(){
+  const passwordInput=document.getElementById("password");
+  const toggleText=document.querySelector(".toggle-password");
+  if(passwordInput.type==="password"){
+    passwordInput.type="text";
+    toggleText.textContent="Hide";
+  }else{
+    passwordInput.type="password";
+    toggleText.textContent="Show";
+  }
+}
+</script>
+</body>
+</html>
